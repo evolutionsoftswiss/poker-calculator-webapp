@@ -1,0 +1,33 @@
+.ui-panel-content {
+	border: none !important;
+}
+
+div .innerPanelNoBorder > div .ui-panel-content {
+	border: none !important;
+}
+
+tr {
+	text-align: center;
+}
+
+.boardPanel {
+	padding-top: 20px;
+}
+
+.bigCardImage {
+	width: 60px;	
+}
+
+.smallCardImage {
+	width: 40px;
+}
+
+.inputText {
+	width: 40px;
+}
+
+@media screen and (max-width: 768px) {
+
+	.content-desktop {display: none;}
+
+}

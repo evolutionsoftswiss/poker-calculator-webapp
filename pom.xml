@@ -1,0 +1,159 @@
+<?xml version="1.0"?>
+
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>ch.evolutionsoft.poker.calucator</groupId>
+	<artifactId>poker-calculator</artifactId>
+	<packaging>war</packaging>
+	<name>poker-calculator-webapp</name>
+	<version>2.0.0</version>
+
+	<properties>
+        <java.version>11</java.version>
+        <junit-jupiter.version>5.7.0</junit-jupiter.version>
+	</properties>
+        
+	<build>
+
+		<plugins>
+
+			<plugin>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>3.3</version>
+				<configuration>
+					<encoding>UTF-8</encoding>
+					<source>${java.version}</source>
+					<target>${java.version}</target>
+				</configuration>
+			</plugin>
+
+			<plugin>
+				<artifactId>maven-war-plugin</artifactId>
+				<version>2.3</version>
+				<configuration>
+					<filteringDeploymentDescriptors>true</filteringDeploymentDescriptors>
+					<warName>poker-calculator-webapp</warName>
+				</configuration>
+			</plugin>
+		</plugins>
+
+	</build>
+
+
+	<dependencies>
+		<dependency>
+		    <groupId>org.glassfish</groupId>
+		    <artifactId>javax.faces</artifactId>
+		    <version>2.3.9</version>
+		</dependency>
+		<dependency>
+		    <groupId>org.jboss.weld.servlet</groupId>
+		    <artifactId>weld-servlet-shaded</artifactId>
+		    <version>3.1.6.Final</version>
+		</dependency>
+		<dependency>
+		    <groupId>javax.servlet</groupId>
+		    <artifactId>jstl</artifactId>
+		    <version>1.2</version>
+		</dependency>
+		<dependency>
+		  <groupId>javax.annotation</groupId>
+		  <artifactId>javax.annotation-api</artifactId>
+		  <version>1.3.2</version>
+		</dependency>
+		<dependency>
+		    <groupId>javax.json</groupId>
+		    <artifactId>javax.json-api</artifactId>
+		    <version>1.1.4</version>
+		</dependency>
+		<dependency>
+		    <groupId>org.glassfish</groupId>
+		    <artifactId>javax.json</artifactId>
+		    <version>1.1.4</version>
+		</dependency>
+		<dependency>
+			<groupId>org.primefaces</groupId>
+			<artifactId>primefaces</artifactId>
+			<version>10.0.0</version>
+		</dependency>
+		<dependency>
+		    <groupId>org.webjars.npm</groupId>
+		    <artifactId>primeflex</artifactId>
+		    <version>3.2.1</version>
+		</dependency>
+	
+		<dependency>
+			<groupId>org.apache.logging.log4j</groupId>
+			<artifactId>log4j-api</artifactId>
+			<version>2.14.0</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.logging.log4j</groupId>
+			<artifactId>log4j-core</artifactId>
+			<version>2.14.0</version>
+		</dependency>
+
+		<dependency>
+		    <groupId>org.junit.jupiter</groupId>
+		    <artifactId>junit-jupiter-api</artifactId>
+		    <version>${junit-jupiter.version}</version>
+		    <scope>test</scope>
+		</dependency>
+
+		<dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-engine</artifactId>
+            <version>${junit-jupiter.version}</version>
+            <scope>test</scope>
+        </dependency>
+		
+		<dependency>
+			<groupId>ch.evolutionsoft.poker</groupId>
+			<artifactId>pokersource</artifactId>
+			<version>1.0</version>
+		</dependency>
+		
+	</dependencies>
+
+	<dependencyManagement>
+		<dependencies>
+			<dependency>
+				<groupId>org.icefaces</groupId>
+				<artifactId>icefaces</artifactId>
+				<version>4.3.0</version>
+				<exclusions>
+					<exclusion>
+						<groupId>org.glassfish</groupId>
+						<artifactId>javax.faces</artifactId>
+					</exclusion>
+					<exclusion>
+						<groupId>javax.mail</groupId>
+						<artifactId>mail</artifactId>
+					</exclusion>
+					<exclusion>
+						<groupId>javax.activation</groupId>
+						<artifactId>javax.activation</artifactId>
+					</exclusion>
+				</exclusions>
+			</dependency>
+			<dependency>
+				<groupId>org.icefaces</groupId>
+				<artifactId>icefaces-ace</artifactId>
+				<version>4.3.0</version>
+			</dependency>
+			<dependency>
+				<groupId>org.icepush</groupId>
+				<artifactId>icepush</artifactId>
+				<version>4.3.0</version>
+				<exclusions>
+					<exclusion>
+						<artifactId>jsp-api</artifactId>
+						<groupId>javax.servlet.jsp</groupId>
+					</exclusion>
+				</exclusions>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
+	
+</project>

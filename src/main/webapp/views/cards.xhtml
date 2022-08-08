@@ -1,0 +1,22 @@
+<f:subview xmlns:c="http://java.sun.com/jstl/core"
+           xmlns:f="http://java.sun.com/jsf/core"
+           xmlns:ui="http://java.sun.com/jsf/facelets"
+           xmlns:h="http://xmlns.jcp.org/jsf/html">
+             
+  <ui:composition>
+    <h:panelGrid columns="13">
+      <c:forEach var="currentSuit" items="#{calculator.cardImagePaths}" >
+        
+        <c:forEach var="currentPath" items="#{currentSuit}">
+          <h:commandLink id="addCard" action="#{calculator.addCard}">
+          	<f:ajax render="menuForm inputForm cardsForm" />
+            <h:graphicImage name="#{currentPath}" styleClass="bigCardImage" />
+          	<f:param name="currentPath" value="#{currentPath}" />
+          </h:commandLink>
+        </c:forEach>
+        
+      </c:forEach>
+    </h:panelGrid>
+  </ui:composition>       
+
+</f:subview>

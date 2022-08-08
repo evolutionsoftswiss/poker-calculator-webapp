@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html>
+<f:view xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:f="http://xmlns.jcp.org/jsf/core"
+	    xmlns:p="http://primefaces.org/ui"
+        xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+        xmlns:h="http://xmlns.jcp.org/jsf/html">
+
+  <h:head>
+	<h:outputStylesheet library="webjars" name="primeflex/3.2.1/primeflex.min.css" />
+	<h:outputStylesheet library="css" name="main.css" />
+	<meta name="viewport" content="width=device-width" />
+	<meta content="no-cache" http-equiv="Pragma" />
+	<meta content="no-cache, no-store, must-revalidate" http-equiv="Cache-Control" />
+  </h:head>
+  
+  <h:body>
+    
+    <h:form id="menuForm" > 
+      <p:panel>
+        <ui:include src="./menu.xhtml">
+          <ui:param name="calculator" value="#{calculator}"/>
+        </ui:include>
+      </p:panel>
+      <p:panel rendered="#{calculator.playerResults != null and not calculator.highLow}" style="max-width: 800px;">
+        <ui:include src="./resultHigh.xhtml">
+          <ui:param name="calculator" value="#{calculator}"/>
+        </ui:include>
+      </p:panel>
+      <p:panel rendered="#{calculator.playerResults != null and calculator.highLow}" style="max-width: 800px;">
+        <ui:include src="./resultHighLow.xhtml">
+          <ui:param name="calculator" value="#{calculator}"/>
+        </ui:include>
+      </p:panel>
+    </h:form>
+
+    <h:form id="inputForm"> 
+      <p:panel>
+        <ui:include src="./input.xhtml">
+          <ui:param name="calculator" value="#{calculator}"/>
+        </ui:include>
+      </p:panel>
+    </h:form>
+
+    <h:form id="cardsForm"> 
+      <p:panel>
+        <ui:include src="./cards.xhtml">
+          <ui:param name="calculator" value="#{calculator}"/>
+        </ui:include>
+      </p:panel>
+    </h:form>
+
+  </h:body>
+
+</f:view>
+</html>

@@ -1,0 +1,40 @@
+<f:subview xmlns:f="http://xmlns.jcp.org/jsf/core"
+           xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+           xmlns:h="http://xmlns.jcp.org/jsf/html">
+
+  <ui:composition>
+    <h:outputText value="Enumerated Boards: #{calculator.totalSimulatedHands}" />
+    <h:dataTable width="90%" var="results" value="#{calculator.playerResults}" >     
+      <h:column>
+        <f:facet name="header">
+          <h:outputText value="Player Hand"/>
+        </f:facet>  
+        <h:outputText value="#{results[4]}" />
+      </h:column>      
+      <h:column>
+        <f:facet name="header">
+          <h:outputText value="% Win"/>
+        </f:facet>  
+        <h:outputText value="#{results[0]}" />
+      </h:column>    
+      <h:column>
+        <f:facet name="header">
+          <h:outputText value="% Lose"/>
+        </f:facet>  
+        <h:outputText value="#{results[1]}" />
+      </h:column>    
+      <h:column>
+        <f:facet name="header">
+          <h:outputText value="% Tie"/>
+        </f:facet>  
+        <h:outputText value="#{results[2]}" />
+      </h:column>    
+      <h:column>
+        <f:facet name="header">
+          <h:outputText value="EV"/>
+        </f:facet>  
+        <h:outputText value="#{results[3]}" />
+      </h:column>
+    </h:dataTable>
+  </ui:composition>     
+</f:subview>
