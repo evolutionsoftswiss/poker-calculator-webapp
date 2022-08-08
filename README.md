@@ -1,9 +1,7 @@
-# Poker Calculator
+# Poker Calculator Webapp
 
 Poker Calculator is a JSF Primefaces web application designed for web servers like tomcat.
 It supports Poker hand evaluation for up to seven players with known hole cards in Omaha, Omaha Hi/Lo and Texas Hold'em.
-
-You can find a running version here: [https://evolutionsoft.ch/](https://evolutionsoft.ch/poker-calculator)
 
 ## License
 
@@ -42,6 +40,6 @@ Poker Calculator uses the poker-eval engine supporting even more Poker variation
 I've found an old build of poker-eval providing *pokersource.jar*, *libpoker-eval.so* and *libpokerjni.so* on my PC.
 However I can't give the details to get the three artifacts from the source no more at the moment.
 
-### Frontend Icefaces portlet
+### Frontend JSF webapp
 
 The frontend uses Primefaces 10.0 as JSF implementation.
