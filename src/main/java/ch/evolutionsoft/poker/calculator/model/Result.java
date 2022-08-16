@@ -1,9 +1,10 @@
 package ch.evolutionsoft.poker.calculator.model;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Result {
+public class Result implements Serializable {
 
 	protected Integer totalSimulatedHands = Integer.valueOf(0);
 	protected List<Double> winningPercentages = new ArrayList<Double>();
