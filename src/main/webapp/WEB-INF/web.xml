@@ -42,10 +42,5 @@
 	   <resource-env-ref-name>BeanManager</resource-env-ref-name>
 	   <resource-env-ref-type>jakarta.enterprise.inject.spi.BeanManager</resource-env-ref-type>
 	</resource-env-ref>
-	
-	<env-entry>
-	    <env-entry-name>jsf/ClientSideSecretKey</env-entry-name>
-	    <env-entry-type>java.lang.String</env-entry-type>
-	    <env-entry-value>ichvRidEYLmdGj18WbnQmg==</env-entry-value>
-	</env-entry>
+
 </web-app>

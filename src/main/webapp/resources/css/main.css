@@ -29,5 +29,5 @@ tr {
 @media screen and (max-width: 768px) {
 
 	.content-desktop {display: none;}
-
+	#cardsForm > .ui-panel {width: 480px; overflow: auto;}
 }
