@@ -8,77 +8,78 @@ import org.pokersource.game.Deck;
 
 public class Board implements Serializable {
 
-	private static final long serialVersionUID = -5358787319613157298L;
-	private List<Card> cards = new ArrayList<Card>();
+  private static final long serialVersionUID = -5358787319613157298L;
+  private List<Card> cards = new ArrayList<>();
 
-	public Board() {
+  public Board() {
 
-		this.init();
-	}
+    this.init();
+  }
 
-	public void init() {
+  public void init() {
 
-		cards.add(new Card());
-		cards.add(new Card());
-		cards.add(new Card());
-		cards.add(new Card());
-		cards.add(new Card());
-	}
+    cards.add(new Card());
+    cards.add(new Card());
+    cards.add(new Card());
+    cards.add(new Card());
+    cards.add(new Card());
+  }
 
-	public List<Card> getCards() {
+  public List<Card> getCards() {
 
-		return this.cards;
-	}
+    return this.cards;
+  }
 
-	public boolean hasValidSize() {
+  public boolean hasValidSize() {
 
-		int numberOfBoardCards = this.getValidCardsNumber();
+    int numberOfBoardCards = this.getValidCardsNumber();
 
-		return numberOfBoardCards == 0 || numberOfBoardCards >= 3 && numberOfBoardCards <= 5;
-	}
+    return numberOfBoardCards == 0 || numberOfBoardCards >= 3 && numberOfBoardCards <= 5;
+  }
 
-	public int getValidCardsNumber() {
+  public int getValidCardsNumber() {
 
-		int number = 0;
+    int number = 0;
 
-		for (Card card : this.cards) {
+    for (Card card : this.cards) {
 
-			String cardValue = card.getValue();
-			if (cardValue != null && Card.isValidValue(cardValue)) {
+      String cardValue = card.getValue();
+      if (cardValue != null && Card.isValidValue(cardValue)) {
 
-				number++;
-			}
-		}
-		return number;
-	}
+        number++;
+      }
+    }
+    return number;
+  }
 
-	public long parseBoard() {
+  public long parseBoard() {
 
-		String stringValue = this.toString();
+    String stringValue = this.toString();
 
-		if (!stringValue.isEmpty()) {
+    if (!stringValue.isEmpty()) {
 
-			return Deck.parseCardMask(stringValue);
-		}
-		return 0L;
-	}
+      return Deck.parseCardMask(stringValue);
+    }
+    return 0L;
+  }
 
-	public void removeCard(int index) {
+  public void removeCard(int index) {
 
-		this.cards.get(index).setValue(null);
-	}
+    this.cards.get(index).setValue(null);
+  }
 
-	public String toString() {
+  public String toString() {
 
-		String result = "";
-		for (Card card : this.cards) {
-			if (card.getValue() != null && card.isValid()) {
-				result += card.toString() + " ";
-			}
-		}
-		if (result.length() > 1) {
-			return result.substring(0, result.length() - 1);
-		}
-		return result;
-	}
+    StringBuilder result = new StringBuilder();
+    for (Card card : this.cards) {
+      if (card.getValue() != null && card.isValid()) {
+        result.append(card.toString()).append(" ");
+      }
+    }
+    if (result.length() > 1) {
+      return result.substring(0, result.length() - 1);
+    }
+    
+    return result.toString();
+  }
 }

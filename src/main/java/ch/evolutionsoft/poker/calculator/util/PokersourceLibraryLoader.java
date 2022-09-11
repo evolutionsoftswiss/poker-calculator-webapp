@@ -7,7 +7,7 @@ public class PokersourceLibraryLoader {
 
 	static boolean initialized = false;
 
-	public synchronized static void init() {
+	public static synchronized void init() {
 
 		if (!initialized) {
 
@@ -27,4 +27,8 @@ public class PokersourceLibraryLoader {
 			initialized = true;
 		}
 	}
+  
+  private PokersourceLibraryLoader() {
+    // Empty private Constructor
+  }
 }

@@ -25,7 +25,7 @@ public class Card implements Serializable {
 	private static Map<String, String> validCards;
 	static {
 
-		validCards = new HashMap<String, String>();
+		validCards = new HashMap<>();
 
 		for (String rank : ranks) {
 			for (String suit : suits) {
@@ -43,6 +43,7 @@ public class Card implements Serializable {
 	private String imagePath = EMPTY_IMAGE_PATH;
 
 	public Card() {
+	  // empty constructor
 	}
 
 	public String getValue() {
@@ -112,11 +113,11 @@ public class Card implements Serializable {
 
 	public static List<List<String>> getAllCardValues() {
 
-		List<List<String>> result = new ArrayList<List<String>>();
+		List<List<String>> result = new ArrayList<>();
 
 		for (int suiteIndex = 0; suiteIndex < suits.length; suiteIndex += 2) {
 
-			List<String> currentList = new ArrayList<String>();
+			List<String> currentList = new ArrayList<>();
 
 			for (String rank : ranks) {
 				currentList.add(rank + suits[suiteIndex]);
@@ -182,7 +183,7 @@ public class Card implements Serializable {
 			return false;
 		}
 
-		return this.value.toLowerCase().equals(otherCard.value.toLowerCase());
+		return this.value.equalsIgnoreCase(otherCard.value);
 	}
 
 	public int hashCode() {

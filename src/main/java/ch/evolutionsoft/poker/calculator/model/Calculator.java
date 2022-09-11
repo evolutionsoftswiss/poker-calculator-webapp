@@ -1,16 +1,7 @@
 package ch.evolutionsoft.poker.calculator.model;
 
-import java.io.IOException;
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
@@ -20,6 +11,7 @@ import javax.faces.model.SelectItem;
 import javax.faces.view.ViewScoped;
 import javax.inject.Named;
 
+import org.apache.logging.log4j.*;
 import org.pokersource.enumerate.Enumerate;
 import org.pokersource.game.Deck;
 
@@ -31,32 +23,31 @@ import static ch.evolutionsoft.poker.calculator.model.CalculatorConstants.*;
 @ViewScoped
 public class Calculator implements Serializable {
 
-	private static final long serialVersionUID = 6369666854255203618L;
+  public static final String SUCCESS = "success";
+  public static final String FAILURE = "failure";
+
+  private static final long serialVersionUID = 6369666854255203618L;
 
 	static {
 
 		PokersourceLibraryLoader.init();
 	}
 
-	private double[] evValues = new double[0];
-	private int[][][] orderKeys;
-	private int[][] orderValues;
-
-	private List<PlayerHand> hands = new LinkedList<PlayerHand>();
+	private List<PlayerHand> hands = new LinkedList<>();
 
 	private Board board;
 
 	private Result result;
-	private List<List<String>> cardPaths = new ArrayList<List<String>>();
+	private List<List<String>> cardPaths = new ArrayList<>();
 
-	private static List<String> orderedGameTypes = new ArrayList<String>();
+	private static List<String> orderedGameTypes = new ArrayList<>();
 	static {
 		orderedGameTypes.add(Integer.toString(Enumerate.GAME_OMAHA));
 		orderedGameTypes.add(Integer.toString(Enumerate.GAME_OMAHA8));
 		orderedGameTypes.add(Integer.toString(Enumerate.GAME_HOLDEM));
 	}
 
-	private static Map<String, SelectItem> gameTypes = new HashMap<String, SelectItem>();
+	private static Map<String, SelectItem> gameTypes = new HashMap<>();
 	static {
 		gameTypes.put(Integer.toString(Enumerate.GAME_OMAHA),
 		    new SelectItem(Integer.valueOf(Enumerate.GAME_OMAHA), "Omaha High"));
@@ -71,6 +62,9 @@ public class Calculator implements Serializable {
 	private int numberOfHoleCards = 4;
 	private String selectedGameType = Integer.toString(Enumerate.GAME_OMAHA);
 
+	private static final Logger calculatorLog = LogManager.getLogger(Calculator.class);
+	
+
 	@PostConstruct
 	public void init() {
 
@@ -81,22 +75,20 @@ public class Calculator implements Serializable {
 		this.updateCardPaths();
 	}
 
-	public String clearAll() throws IOException {
+	public String clearAll() {
 
 		this.init();
 		
-		return "success";
+		return SUCCESS;
 	}
 	
 	public String calculate() {
 
 		this.result = null;
 
-		long[] longPockets = new long[this.hands.size()];
-		List<Long> tempPockets = new ArrayList<Long>();
-		long longBoardValue = 0L;
+		List<Long> tempPockets = new ArrayList<>();
 		int numberOfValidHands = 0;
-		List<String> validHandsStrings = new ArrayList<String>();
+		List<String> validHandsStrings = new ArrayList<>();
 
 		Set<String> doubledCards = this.containsCardSeveralTimes();
 		if (!doubledCards.isEmpty()) {
@@ -104,7 +96,7 @@ public class Calculator implements Serializable {
 			FacesMessage facesMessage = new FacesMessage("Card(s) " + doubledCards.toString() + " used more than once");
 			facesMessage.setSeverity(FacesMessage.SEVERITY_WARN);
 			FacesContext.getCurrentInstance().addMessage(null, facesMessage);
-			return "failure";
+			return FAILURE;
 		}
 
 		for (int i = 0; i < this.hands.size(); i++) {
@@ -116,7 +108,7 @@ public class Calculator implements Serializable {
 				facesMessage.setSeverity(FacesMessage.SEVERITY_WARN);
 				FacesContext.getCurrentInstance().addMessage(null, facesMessage);
 
-				return "failure";
+				return FAILURE;
 
 			} else {
 
@@ -130,7 +122,7 @@ public class Calculator implements Serializable {
 			facesMessage.setSeverity(FacesMessage.SEVERITY_WARN);
 			FacesContext.getCurrentInstance().addMessage(null, facesMessage);
 
-			return "failure";
+			return FAILURE;
 		}
 
 		for (int i = 0; i < numberOfValidHands; i++) {
@@ -143,17 +135,19 @@ public class Calculator implements Serializable {
 			tempPockets.add(pocket);
 		}
 
-		this.evValues = new double[numberOfValidHands];
-		this.orderKeys = new int[1][][];
-		this.orderValues = new int[1][];
 
-		longPockets = new long[numberOfValidHands];
+	  double[] evValues = new double[numberOfValidHands];
+	  int[][][] orderKeys = new int[1][][];
+	  int[][] orderValues = new int[1][];
+
+	  long[] longPockets = new long[numberOfValidHands];
 
 		for (int n = 0; n < numberOfValidHands; n++) {
 
 			longPockets[n] = tempPockets.get(n);
 		}
 
+		long longBoardValue;
 		if (this.board.hasValidSize()) {
 
 			longBoardValue = this.board.parseBoard();
@@ -161,44 +155,50 @@ public class Calculator implements Serializable {
 
 			FacesContext.getCurrentInstance().addMessage(null,
 			    new FacesMessage("Board has invalid number of cards, supported are 0, 3, 4 or 5 cards"));
-			return "failure";
+			return FAILURE;
 		}
 
 		try {
 			synchronized (Enumerate.class) {
-				Enumerate.PotEquity(this.gameType, 0, longPockets, longBoardValue, 0L, this.evValues, this.orderKeys,
-				    this.orderValues);
+				Enumerate.PotEquity(this.gameType, 0, longPockets, longBoardValue, 0L, evValues, orderKeys,
+				    orderValues);
 			}
 
 			boolean isHiLow = this.isHighLow();
 			this.result = new Result(orderKeys[0], orderValues[0], evValues, validHandsStrings, isHiLow);
-			return "success";
+
+			calculatorLog.info("Successfully calculated results for gameType {}", gameType);
+			
+			return SUCCESS;
 
 		} catch (UnsatisfiedLinkError ule) {
 
 			FacesMessage msg = new FacesMessage("Calculator Engine currently unavaliable, please try again later.");
 			msg.setSeverity(FacesMessage.SEVERITY_ERROR);
 			FacesContext.getCurrentInstance().addMessage(null, msg);
-			return "failure";
+			return FAILURE;
 
-		} catch (Exception ex) {
+		} catch (Exception exception) {
 
-			FacesMessage msg = new FacesMessage(
-			    "An unexpected Exception occured:" + ex.getCause() + "hands: " + this.hands + "longHandValues: "
-			        + Arrays.toString(longPockets) + "board: " + this.board + "longBoardValue: " + longBoardValue);
+			FacesMessage msg = new FacesMessage("An unexpected Exception occured:");
 			msg.setSeverity(FacesMessage.SEVERITY_ERROR);
 			FacesContext.getCurrentInstance().addMessage(null, msg);
-			return "failure";
+
+			calculatorLog.warn("hands={}, handsLongValue={}, board={}, boardLongValue={} cause following excpetion",
+			    this.hands,
+			    Arrays.toString(longPockets),
+			    this.board,
+			    longBoardValue);
+			calculatorLog.warn("Unexpected exception during calculation.", exception);
+			
+			return FAILURE;
 		}
 	}
 
 	public boolean isHighLow() {
 
-		if (this.gameType == Enumerate.GAME_OMAHA8) {
+		return this.gameType == Enumerate.GAME_OMAHA8;
 
-			return true;
-		}
-		return false;
 	}
 
 	public void addCard() {
@@ -206,7 +206,7 @@ public class Calculator implements Serializable {
 		FacesContext context = FacesContext.getCurrentInstance();
 		Map<String, String> requestMap = context.getExternalContext().getRequestParameterMap();
 
-		String path = (String) requestMap.get("currentPath");
+		String path = requestMap.get("currentPath");
 
 		if (path != null && !path.equals(Card.EMPTY_IMAGE_PATH)) {
 
@@ -251,7 +251,7 @@ public class Calculator implements Serializable {
 
 	public void removePlayer() {
 
-		if (this.hands.size() > 0) {
+		if (!this.hands.isEmpty()) {
 			this.hands.remove(this.hands.size() - 1);
 			this.updateCardPaths();
 		}
@@ -275,21 +275,21 @@ public class Calculator implements Serializable {
 	public void selectedGameTypeChange(ValueChangeEvent event) {
 
 		String newValue = (String) event.getNewValue();
-		int gameType = Integer.parseInt(newValue);
-		this.setGameType(gameType);
+		int newSelectedGameType = Integer.parseInt(newValue);
+		this.setGameType(newSelectedGameType);
 		this.init();
 	}
 
 	public Collection<SelectItem> getGameTypes() {
 
-		List<SelectItem> result = new ArrayList<SelectItem>();
+		List<SelectItem> allGameTypes = new ArrayList<>();
 
-		for (String gameType : orderedGameTypes) {
+		for (String currentGameType : orderedGameTypes) {
 
-			result.add(gameTypes.get(gameType));
+			allGameTypes.add(gameTypes.get(currentGameType));
 		}
 
-		return result;
+		return allGameTypes;
 	}
 
 	public int getGameType() {
@@ -353,7 +353,7 @@ public class Calculator implements Serializable {
 
 		if (this.result == null) {
 
-			return null;
+			return Collections.emptyList();
 		}
 
 		if (this.isHighLow()) {
@@ -398,7 +398,7 @@ public class Calculator implements Serializable {
 
 	List<List<String>> highLowResult() {
 
-		List<List<String>> results = new ArrayList<List<String>>();
+		List<List<String>> results = new ArrayList<>();
 
 		int numberOfEvaluatedPlayers = this.result.getEVValues().size();
 
@@ -414,7 +414,7 @@ public class Calculator implements Serializable {
 
 		for (int playerNumber = 0; playerNumber < numberOfEvaluatedPlayers; playerNumber++) {
 
-			List<String> currentPlayerResults = new ArrayList<String>();
+			List<String> currentPlayerResults = new ArrayList<>();
 
 			double winBothRate = scoopFactors.get(playerNumber);
 			double readableScoopValue = ((double) Math.round(MULTIPLIER_TEN_THOUSAND * winBothRate)) / MULTIPLIER_HUNDRED;
@@ -456,7 +456,7 @@ public class Calculator implements Serializable {
 	}
 
 	List<List<String>> initHighResult() {
-		List<List<String>> results = new ArrayList<List<String>>();
+		List<List<String>> results = new ArrayList<>();
 
 		int numberOfEvaluatedPlayers = this.result.getEVValues().size();
 
@@ -468,7 +468,7 @@ public class Calculator implements Serializable {
 
 		for (int playerNumber = 0; playerNumber < numberOfEvaluatedPlayers; playerNumber++) {
 
-			List<String> currentPlayerResults = new ArrayList<String>();
+			List<String> currentPlayerResults = new ArrayList<>();
 
 			double winRate = winningFactors.get(playerNumber);
 			double readableWinValue = ((double) Math.round(MULTIPLIER_TEN_THOUSAND * winRate)) / MULTIPLIER_HUNDRED;
@@ -500,8 +500,8 @@ public class Calculator implements Serializable {
 
 	public Set<String> containsCardSeveralTimes() {
 
-		Set<String> chosenValues = new HashSet<String>();
-		Set<String> doubleValues = new HashSet<String>();
+		Set<String> chosenValues = new HashSet<>();
+		Set<String> doubleValues = new HashSet<>();
 
 		for (PlayerHand hand : this.hands) {
 			for (Card card : hand.getCards()) {
@@ -581,7 +581,7 @@ public class Calculator implements Serializable {
 
 		for (List<String> currentSuitList : allCardValues) {
 
-			List<String> currentCardList = new ArrayList<String>();
+			List<String> currentCardList = new ArrayList<>();
 			for (String currentCard : currentSuitList) {
 
 				if (this.containsCard(currentCard)) {
@@ -604,7 +604,7 @@ public class Calculator implements Serializable {
 
 		for (List<String> currentSuitList : allCardValues) {
 
-			List<String> currentCardList = new ArrayList<String>();
+			List<String> currentCardList = new ArrayList<>();
 			for (String currentCard : currentSuitList) {
 				currentCardList.add("images/card" + currentCard.toLowerCase() + ".jpg");
 

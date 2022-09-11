@@ -30,4 +30,5 @@ tr {
 
 	.content-desktop {display: none;}
 	#cardsForm > .ui-panel {width: 480px; overflow: auto;}
+	#inputForm > .ui-panel {width: 480px; overflow: auto;}
 }
