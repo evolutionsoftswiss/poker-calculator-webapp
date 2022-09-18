@@ -3,6 +3,8 @@
 Poker Calculator is a JSF Primefaces web application designed for web servers like tomcat.
 It supports Poker hand evaluation for up to seven players with known hole cards in Omaha, Omaha Hi/Lo and Texas Hold'em.
 
+You find an online version here: [evolutionsoft.ch/poker-calculator-omaha-texas/](https://evolutionsoft.ch/poker-calculator-omaha-texas/)
+
 ## License
 
 Poker Calculator is provided under the GPL-3.0 or later GPL versions license.
