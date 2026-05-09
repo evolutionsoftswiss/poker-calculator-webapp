@@ -13,7 +13,7 @@
 	<h:outputStylesheet library="css" name="main.css" />
 	<meta name="viewport" content="width=device-width" />
 	<meta content="no-cache" http-equiv="Pragma" />
-	<meta content="no-cache, no-store, must-revalidate" http-equiv="Cache-Control" />
+	<meta content="no-cache, must-revalidate" http-equiv="Cache-Control" />
   </h:head>
   
   <h:body>
@@ -24,12 +24,12 @@
           <ui:param name="calculator" value="#{calculator}"/>
         </ui:include>
       </p:panel>
-      <p:panel rendered="#{calculator.playerResults != null and not calculator.highLow}" style="max-width: 800px;">
+      <p:panel rendered="#{not empty calculator.playerResults and not calculator.highLow}" style="max-width: 800px;">
         <ui:include src="./resultHigh.xhtml">
           <ui:param name="calculator" value="#{calculator}"/>
         </ui:include>
       </p:panel>
-      <p:panel rendered="#{calculator.playerResults != null and calculator.highLow}" style="max-width: 800px;">
+      <p:panel rendered="#{not empty calculator.playerResults and calculator.highLow}" style="max-width: 800px;">
         <ui:include src="./resultHighLow.xhtml">
           <ui:param name="calculator" value="#{calculator}"/>
         </ui:include>

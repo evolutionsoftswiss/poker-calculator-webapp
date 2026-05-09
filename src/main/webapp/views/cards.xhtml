@@ -9,7 +9,7 @@
         
         <c:forEach var="currentPath" items="#{currentSuit}">
           <h:commandLink id="addCard" action="#{calculator.addCard}">
-          	<f:ajax render="menuForm inputForm cardsForm" />
+          	<f:ajax render="menuForm inputForm @this" />
             <h:graphicImage name="#{currentPath}" styleClass="bigCardImage" />
           	<f:param name="currentPath" value="#{currentPath}" />
           </h:commandLink>
